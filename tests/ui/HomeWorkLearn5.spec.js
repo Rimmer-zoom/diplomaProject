@@ -1,9 +1,6 @@
-import { test, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { App } from '../../src/pages/app.page';
-import { UserBuilder } from '../../src/helpers/builders/index.builder'
-
-const url = 'https://realworld.qa.guru/';
+import { test, expect } from '../../src/helpers/fixtures/fixture.js';
+import { UserBuilder } from '../../src/helpers/builders/index.builder';
 
 
 const description = faker.lorem.words(4);
@@ -13,16 +10,15 @@ const tags = faker.word.adjective();
 const user = new UserBuilder().withEmail().withName().withPassword().build();
 const {email, password, name} = user;
 
-test('Регистрация, авторизация и разлогин', async ({ page }) => {
-  const app = new App(page);
+test('Регистрация, авторизация и разлогин', async ({ app }) => {
   
-  await app.homePage.goToRegister(url);
+  await app.homePage.goToRegister();
   await app.registrationPage.registration(name, email, password); // Регистрация
   
   await app.profilePage.openMenu();
   await app.profilePage.logOut(); //Выход после регистрации
   
-  await app.homePage.goToLogin(url);
+  await app.homePage.goToLogin();
   await app.loginPage.login(email, password); // Авторизация
   
   await expect(app.homePage.profileName).toContainText(name); // Проверяем, что пользователь авторизовался
@@ -32,10 +28,9 @@ test('Регистрация, авторизация и разлогин', async
   await expect(app.homePage.mainContentnav).toContainText('Sign up'); // Выход после авторизации
 }); 
 
-test('Применение фильтра', async ({ page } ) => {
-    const app = new App(page);
+test('Применение фильтра', async ({ app } ) => {
 
-    await app.homePage.goToRegister(url);
+    await app.homePage.goToRegister();
     await app.registrationPage.registration(name, email, password);
     await expect(app.homePage.profileName).toContainText(name); 
 
@@ -44,10 +39,9 @@ test('Применение фильтра', async ({ page } ) => {
     await expect(app.profilePage.filter).toBeVisible(); // Фильтр применен
 });
 
-test('Создание статьи', async ({ page }) => {
-    const app = new App(page);
+test('Создание статьи', async ({ app }) => {
 
-    await app.homePage.goToRegister(url);
+    await app.homePage.goToRegister();
     await app.registrationPage.registration(name, email, password);
     await app.homePage.goToArticle()
     await app.articlePage.addArticle(title, description, article, tags);
@@ -57,9 +51,9 @@ test('Создание статьи', async ({ page }) => {
 
 });
 
-test('Удаление статьи', async ({ page } ) => {
-    const app = new App(page);
-    await app.homePage.goToRegister(url);
+test('Удаление статьи', async ({ app } ) => {
+    
+    await app.homePage.goToRegister();
     await app.registrationPage.registration(name, email, password);
 
     await app.homePage.goToArticle()
@@ -70,7 +64,7 @@ test('Удаление статьи', async ({ page } ) => {
     await app.profilePage.openArticle();
     
     await Promise.all([
-    page.waitForEvent('dialog').then(dialog => {
+    app.page.waitForEvent('dialog').then(dialog => {
       expect(dialog.message()).toBe('Want to delete the article?');
       dialog.accept();
     }),
@@ -81,12 +75,11 @@ test('Удаление статьи', async ({ page } ) => {
   }
 );
 
-test('Добавление комментария к статье', async ({ page }) => {
-    const app = new App(page);
+test('Добавление комментария к статье', async ({ app }) => {
+    
     const comment = faker.lorem.sentence();
     
-    
-    await app.homePage.goToRegister(url);
+    await app.homePage.goToRegister();
     await app.registrationPage.registration(name, email, password);
     await app.homePage.goToArticle()
     await app.articlePage.addArticle(title, description, article, tags);

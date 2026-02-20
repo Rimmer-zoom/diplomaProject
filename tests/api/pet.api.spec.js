@@ -1,13 +1,14 @@
-import { test, expect, request } from '@playwright/test';
-import { PetService } from '../../src/services/pet.service';
+import { test, expect } from '../../src/helpers/fixtures/fixturesApi.js';
 import { generatePetData } from '../../src/utils/pet.data';
+import { PetBuilder } from '../../src/helpers/builders/index.builder';
 
-const petService = new PetService();
 
 test.describe('Petstore API - Functional tests', () => {
 
-  test('создать нового питомца', async () => {
-    const pet = generatePetData({ status: 'available' });
+  test('создать нового питомца', async ({ petService }) => {
+    
+
+    const pet = new PetBuilder().withStatus('available').build();
 
     const response = await petService.createPet(pet);
     //console.log('URL:', response.url());
@@ -20,8 +21,10 @@ test.describe('Petstore API - Functional tests', () => {
     expect(body.status).toBe('available');
   });
 
-  test('получить существующего питомца по ID', async () => {
-    const pet = generatePetData();
+  test('получить существующего питомца по ID', async ({ petService }) => {
+    
+
+    const pet = new PetBuilder().build();
     await petService.createPet(pet);
 
     const response = await petService.getPet(pet.id);
@@ -31,8 +34,10 @@ test.describe('Petstore API - Functional tests', () => {
     expect(body.id).toBe(pet.id);
   });
 
-  test('обновить статус питомца на "sold"', async () => {
-    const pet = generatePetData({ status: 'available' });
+  test('обновить статус питомца на "sold"', async ({ petService }) => {
+    
+
+    const pet = new PetBuilder().withStatus('available').build();
     await petService.createPet(pet);
 
     pet.status = 'sold';
@@ -43,8 +48,10 @@ test.describe('Petstore API - Functional tests', () => {
     expect(updatedPet.status).toBe('sold');
   });
 
-  test('удалить существующего питомца', async () => {
-    const pet = generatePetData();
+  test('удалить существующего питомца', async ({ petService }) => {
+    
+
+    const pet = new PetBuilder().build();
     await petService.createPet(pet);
 
     const deleteResponse = await petService.deletePet(pet.id);
@@ -54,8 +61,10 @@ test.describe('Petstore API - Functional tests', () => {
     expect(getResponse.status()).toBe(404);
   });
 
-  test('вернуть список питомцев, отфильтрованных по статусу', async () => {
-    const pet = generatePetData({ status: 'pending' });
+  test('вернуть список питомцев, отфильтрованных по статусу', async ({ petService }) => {
+    
+
+    const pet = new PetBuilder().withStatus('pending').build();
     await petService.createPet(pet);
 
     const response = await petService.findByStatus('pending');

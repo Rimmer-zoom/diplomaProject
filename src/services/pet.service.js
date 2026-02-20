@@ -1,8 +1,8 @@
 import { request } from '@playwright/test';
 
 export class PetService {
-  constructor() {
-    this.baseURL = 'https://petstore.swagger.io/v2';
+  constructor(baseURL) {
+    this.baseURL = baseURL;
     this.apiContext = null;
   }
 

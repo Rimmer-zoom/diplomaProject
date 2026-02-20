@@ -6,3 +6,12 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Test artifacts
+allure-results/
+allure-report/
+.env
+.DS_Store
+.idea/
+.vscode/
+Testts/
