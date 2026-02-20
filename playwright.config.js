@@ -41,7 +41,9 @@ export default defineConfig({
     {
       name: 'ui-chromium',
       
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'],
+        baseURL: process.env.BASE_URL || 'https://realworld.qa.guru/',
+       },
     },
 
     // API проект

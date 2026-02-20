@@ -10,12 +10,12 @@ export class HomePage {
       this.homeButton = page.getByRole('link', { name: 'Home' }).waitFor();
         
     }
-async goToRegister (url){
-    await this.page.goto(url);
+async goToRegister (){
+    await this.page.goto('/register');
     await this.singupbutton.click();
 }
-async goToLogin (url){
-    await this.page.goto(url);
+async goToLogin (){
+    await this.page.goto('/login');
     await this.loginbutton.click();
 }    
 async goToArticle (){
