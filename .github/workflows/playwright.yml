@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: [chromium, firefox, webkit]
+        browser: [ui-chromium, api]
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run tests
-        run: npx playwright test --project ${{ matrix.browser }} --reporter=list
+        run: npx playwright test --project ${{ matrix.project }} --reporter=list
 
       - name: Notify Telegram
         env:
