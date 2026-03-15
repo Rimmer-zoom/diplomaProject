@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        browser: [ui-chromium, api]
+        project: [ui-chromium, api]
 
     steps:
       - name: Checkout code
