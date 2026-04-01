@@ -1,5 +1,5 @@
 import { test, expect } from '../../src/helpers/fixtures/fixturesApi.js';
-import { generatePetData } from '../../src/utils/pet.data';
+
 import { PetBuilder } from '../../src/helpers/builders/index.builder';
 
 

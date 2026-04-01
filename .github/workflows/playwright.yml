@@ -24,14 +24,50 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
       - name: Run tests
-        run: npx playwright test --project ${{ matrix.project }} --reporter=list
+        id: tests
+        run: |
+          mkdir -p test-results
+          npx playwright test --project ${{ matrix.project }} --reporter=json,list --output test-results 2>&1 || true
+          
+          echo "project=${{ matrix.project }}" >> $GITHUB_OUTPUT
+          
+          if [ -f test-results/results.json ]; then
+            echo "total=$(jq '.stats.total // 0' test-results/results.json)" >> $GITHUB_OUTPUT
+            echo "passed=$(jq '.stats.passed // 0' test-results/results.json)" >> $GITHUB_OUTPUT
+            echo "failed=$(jq '.stats.failed // 0' test-results/results.json)" >> $GITHUB_OUTPUT
+            echo "duration=$(jq '.stats.duration // 0' test-results/results.json)" >> $GITHUB_OUTPUT
+          else
+            echo "total=0" >> $GITHUB_OUTPUT
+            echo "passed=0" >> $GITHUB_OUTPUT
+            echo "failed=0" >> $GITHUB_OUTPUT
+            echo "duration=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.project }}
+          path: test-results/
 
       - name: Notify Telegram
+        if: always()
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PROJECT_NAME: ${{ matrix.project }}
+          TOTAL_TESTS: ${{ steps.tests.outputs.total }}
+          PASSED_TESTS: ${{ steps.tests.outputs.passed }}
+          FAILED_TESTS: ${{ steps.tests.outputs.failed }}
+          DURATION: ${{ steps.tests.outputs.duration }}
+          GITHUB_SERVER_URL: ${{ github.server_url }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
         run: node ci/telegram-notify.js

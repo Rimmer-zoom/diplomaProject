@@ -19,8 +19,7 @@ async goToLogin (){
     await this.loginbutton.click();
 }    
 async goToArticle (){
-    await this.page.waitForLoadState('networkidle');
-    await this.articleButton.waitFor();
+    
     await this.articleButton.click();
 
 }

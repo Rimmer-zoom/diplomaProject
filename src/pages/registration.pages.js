@@ -7,13 +7,11 @@ export class RegistrationPage {
         this.singupButton = page.getByRole('button', { name: 'Sign up' }).describe('Кнопка Сохранить');
     }
 async registration (name, email, password){
-    await this.nameInput.waitFor({ state: 'visible' });
+    
     await this.nameInput.click()
     await this.nameInput.fill(name)
-    await this.emailInput.waitFor({ state: 'visible' });
     await this.emailInput.click()
     await this.emailInput.fill(email)
-    await this.passwordInput.waitFor({ state: 'visible' });
     await this.passwordInput.click()
     await this.passwordInput.fill(password)
     await this.singupButton.click()

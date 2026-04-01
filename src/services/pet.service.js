@@ -6,42 +6,45 @@ export class PetService {
     this.apiContext = null;
   }
 
-  async init() {
+  async ensureContext() {
     if (!this.apiContext) {
       this.apiContext = await request.newContext({
         extraHTTPHeaders: { 'Content-Type': 'application/json' },
         timeout: 60000,
       });
     }
+    return this.apiContext;
   }
 
   async createPet(petData) {
-    await this.init();
-    // полный URL, baseURL больше не нужен
-    return this.apiContext.post(`${this.baseURL}/pet`, { data: petData });
+    const context = await this.ensureContext();
+    return context.post(`${this.baseURL}/pet`, { data: petData });
   }
 
   async getPet(petId) {
-    await this.init();
-    return this.apiContext.get(`${this.baseURL}/pet/${petId}`);
+    const context = await this.ensureContext();
+    return context.get(`${this.baseURL}/pet/${petId}`);
   }
 
   async updatePet(petData) {
-    await this.init();
-    return this.apiContext.put(`${this.baseURL}/pet`, { data: petData });
+    const context = await this.ensureContext();
+    return context.put(`${this.baseURL}/pet`, { data: petData });
   }
 
   async deletePet(petId) {
-    await this.init();
-    return this.apiContext.delete(`${this.baseURL}/pet/${petId}`);
+    const context = await this.ensureContext();
+    return context.delete(`${this.baseURL}/pet/${petId}`);
   }
 
   async findByStatus(status) {
-    await this.init();
-    return this.apiContext.get(`${this.baseURL}/pet/findByStatus?status=${status}`);
+    const context = await this.ensureContext();
+    return context.get(`${this.baseURL}/pet/findByStatus?status=${status}`);
   }
 
-  async dispose() {
-    if (this.apiContext) await this.apiContext.dispose();
+  async close() {
+    if (this.apiContext) {
+      await this.apiContext.dispose();
+      this.apiContext = null;
+    }
   }
 }

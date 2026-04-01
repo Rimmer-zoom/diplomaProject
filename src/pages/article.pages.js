@@ -21,12 +21,3 @@ async addArticle (title, description, article, tags){
 }
 }
 
-export class OpenArticlePage {
-    constructor(page){
-        this.page = page;
-        this.articleDelete =  page.locator('button.btn.btn-sm', { hasText: 'Delete Article' }).first();
-    }
-async deleteArticle (){
-    await this.articleDelete.click()
-}
-}
