@@ -1,14 +1,12 @@
 import { faker } from '@faker-js/faker';
 import { test, expect } from '../../src/helpers/fixtures/fixture.js';
-import { UserBuilder } from '../../src/helpers/builders/index.builder';
+import { UserBuilder, ArticleBuilder } from '../../src/helpers/builders/index.builder';
 
 
-const description = faker.lorem.words(4);
-const title = faker.lorem.paragraph(4);
-const article = faker.lorem.paragraph(6);
-const tags = faker.word.adjective(); 
 const user = new UserBuilder().withEmail().withName().withPassword().build();
 const {email, password, name} = user;
+const articleData = new ArticleBuilder().withTitle().withDescription().withArticle().withTags().build();
+const { title, description, article, tags } = articleData;
 
 test('Регистрация, авторизация и разлогин', async ({ app }) => {
   
@@ -77,7 +75,9 @@ test('Удаление статьи', async ({ app } ) => {
 
 test('Добавление комментария к статье', async ({ app }) => {
     
-    const comment = faker.lorem.sentence();
+    
+    const commentData = new ArticleBuilder().withComment().buildComment();
+    const comment = commentData.text;
     
     await app.homePage.goToRegister();
     await app.registrationPage.registration(name, email, password);
@@ -89,9 +89,9 @@ test('Добавление комментария к статье', async ({ app
     // Добавляем комментарий к статье
     await app.comment.addComment(comment);
 
-    const commentData = await app.comment.commentData();
+    const commentDataResult = await app.comment.commentData();
     // Проверяем, что комментарий добавлен
-    expect(commentData).not.toBeNull();
-    expect(commentData.text).toContain(comment);
-    expect(commentData.author).toContain(user.name);
+    expect(commentDataResult).not.toBeNull();
+    expect(commentDataResult.text).toContain(comment);
+    expect(commentDataResult.author).toContain(user.name);
     })

@@ -17,5 +17,8 @@
     "@types/node": "^24.10.2",
     "allure-commandline": "^2.36.0",
     "allure-playwright": "^3.4.5"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }

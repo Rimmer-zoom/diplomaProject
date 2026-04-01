@@ -4,3 +4,4 @@ export * from './profile.page';
 export * from './article.pages';
 export * from './login.page';
 export * from './comment.page';
+export * from './openArticle.page.js';
