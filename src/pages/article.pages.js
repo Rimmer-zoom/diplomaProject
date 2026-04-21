@@ -10,14 +10,22 @@ export class ArticlePage {
     }
 async addArticle (title, description, article, tags){
     await this.titleInput.click()
-    await this.titleInput.fill(description)
+    await this.titleInput.fill(title)
     await this.aboutInput.click()
-    await this.aboutInput.fill(title)
+    await this.aboutInput.fill(description)
     await this.articleInput.click()
     await this.articleInput.fill(article)
     await this.tagsInput.click()
     await this.tagsInput.fill(tags)
     await this.publishButton.click()
+}
+
+async updateArticle(title, description, article, tags) {
+    await this.titleInput.fill(title);
+    await this.aboutInput.fill(description);
+    await this.articleInput.fill(article);
+    await this.tagsInput.fill(tags);
+    await this.page.getByRole('button', { name: 'Update Article' }).click();
 }
 }
 

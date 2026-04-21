@@ -1,3 +1,5 @@
+import { expect } from '@playwright/test';
+
 export class Comment{
     constructor(page){
         this.commentInput = page.getByPlaceholder('Write a comment...'); 
@@ -15,7 +17,8 @@ async addComment(commentText){
 
         // Ожидание появления комментария
         const commentLocator = this.commentTextLocator.filter({ hasText: commentText });
-        await commentLocator.waitFor({ state: 'visible' });
+        await expect(commentLocator).toBeVisible();
+        //await commentLocator.waitFor({ state: 'visible' });
 }
     
 

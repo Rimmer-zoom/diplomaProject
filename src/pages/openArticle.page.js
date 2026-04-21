@@ -3,6 +3,7 @@ export class OpenArticlePage {
         this.page = page;
         this.deleteButton = page.getByRole('button', { name: 'Delete Article' }).first();
         this.editButton = page.getByRole('button', { name: 'Edit Article' }).first();
+        //this.editButton = page.getByRole('link', { name: 'Edit Article' }).first();
     
     }
 

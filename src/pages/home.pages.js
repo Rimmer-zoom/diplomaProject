@@ -7,7 +7,7 @@ export class HomePage {
       this.mainContent = (page.locator('main'));
       this.mainContentnav = (page.locator('nav'));
       this.articleButton = page.getByRole('link', { name: 'New Article' });
-      this.homeButton = page.getByRole('link', { name: 'Home' }).waitFor();
+      this.homeButton = page.getByRole('link', { name: 'Home' });
         
     }
 async goToRegister (){
@@ -21,6 +21,8 @@ async goToLogin (){
 async goToArticle (){
     
     await this.articleButton.click();
-
+}
+async goToHome() {
+    await this.homeButton.click();
 }
 }
